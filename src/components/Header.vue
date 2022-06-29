@@ -15,7 +15,7 @@
         </ul>
         <ul class="navbar-nav ml-auto">
           <li class="nav-item" data-toggle="modal" data-target="#navModal" @click="updateBalance()">
-            <a class="nav-link" href="#">{{ newBalance }} {{ newCurrency }}</a>
+            <a class="nav-link" href="#" id="balance">{{ newBalance }} {{ newCurrency }}</a>
           </li>
         </ul>
       </div>
@@ -31,9 +31,9 @@
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
-          <div class="navModalBody p-3">
+          <div class="modal-body navModalBody">
             <div class="form-group m-0">
-              <input type="text" id="currentBalance" class="form-control" placeholder="Balance" v-model="newBalance" @change="NewBalance()" />
+              <input type="text" id="currentBalance" class="form-control" v-model="newBalance" @keyup="NewBalance()" />
             </div>
           </div>
           <div class="modal-footer">
@@ -50,6 +50,7 @@
 import store from '../store';
 import { computed } from 'vue';
 import { useStore } from "vuex";
+import util from '../utils';
 export default {
   data() {
     return {
@@ -69,15 +70,15 @@ export default {
       }
     },
     save: function(){
-      store.dispatch("updateBalance", this.newBalance.toLocaleString('en').toString());
+      store.dispatch("updateBalance", this.newBalance);
     },
     NewBalance: function(){
-      this.newBalance = Number(this.newBalance).toLocaleString('en');
+      this.newBalance = util.convertPrice(this.newBalance.split(',').join(''));
     }
   },
   mounted: function () {
-    this.newBalance = Number(computed(() => store.state.balance).value).toLocaleString('en');
-    this.newCurrency = computed(() => store.state.currency).value;
+     this.newCurrency = store.getters.getCurrency;
+     this.newBalance = store.getters.getBalance;
   }
 };
 </script>

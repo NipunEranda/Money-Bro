@@ -22,6 +22,5 @@ export default {
   .container-body{
     padding: 20px 50px 20px 50px;
   }
-
-  @import url('./assets/css/index.css');
+    @import url('./assets/css/index.css');
 </style>
