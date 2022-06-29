@@ -13,7 +13,8 @@ const store = createStore({
             { id: 2, name: 'Travel' },
             { id: 3, name: 'Bills' },
             { id: 4, name: 'Education' },
-            { id: 5, name: 'Office' }
+            { id: 5, name: 'Office' },
+            { id: 6, name: 'Gift' }
           ],
         list: []
       },
@@ -21,7 +22,8 @@ const store = createStore({
         types:
           [
             { id: 1, name: 'Salary' },
-            { id: 2, name: 'Gift' }
+            { id: 2, name: 'Gift' },
+            { id: 3, name: 'Refunds' }
           ],
         list: []
       },
