@@ -1,5 +1,5 @@
 <template>
-    <div>
-        Budget
+    <div class="container">
+        
     </div>
 </template>

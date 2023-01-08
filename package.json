@@ -8,13 +8,16 @@
     "start": "netlify dev"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.2.1",
+    "@fortawesome/free-brands-svg-icons": "^6.2.1",
+    "@fortawesome/free-regular-svg-icons": "^6.2.1",
+    "@fortawesome/free-solid-svg-icons": "^6.2.1",
+    "@fortawesome/vue-fontawesome": "^3.0.2",
     "core-js": "^3.8.3",
     "jsonwebtoken": "^9.0.0",
     "middy": "^0.36.0",
     "moment": "^2.29.4",
     "mongodb": "^4.9.1",
-    "primeicons": "^5.0.0",
-    "primevue": "^3.17.0",
     "register-service-worker": "^1.7.2",
     "vue": "^3.2.13",
     "vue-router": "^4.0.3",

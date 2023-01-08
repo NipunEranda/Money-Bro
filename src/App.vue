@@ -1,13 +1,26 @@
 <template>
-  <div>
+  <!-- <div>
     <div class="container-loader hidden"><div class="loader"></div></div>
     <Header v-if="showHeader"></Header>
+    <Sidebar v-if="showHeader"></Sidebar>
     <router-view class="container-body" />
+  </div> -->
+
+  <div class="box">
+    <div class="leftSide">
+      <Sidebar v-if="showHeader"></Sidebar>
+    </div>
+    <div class="rightSide">
+      <div class="container-loader hidden"><div class="loader"></div></div>
+      <router-view class="container-body" />
+    </div>
   </div>
+
 </template>
 
 <script>
 import Header from "@/components/Header.vue";
+import Sidebar from "./components/Sidebar.vue";
 import store from './store';
 import { useStore } from "vuex";
 export default {
@@ -26,13 +39,29 @@ export default {
   },
   components: {
     Header,
+    Sidebar
   },
 };
 </script>
 
 <style>
-  .container-body{
-    padding: 10px;
-  }
-    @import url('./assets/css/index.css');
+.container-body{
+  margin: 0;
+  padding: 0;
+}
+
+.leftSide {
+  flex: 350px 0 0 0;
+}
+
+.rightSide {
+  flex: 1;
+  margin-left: 350px;
+}
+
+.box {
+  display: flex;
+}
+
+@import url('./assets/css/index.css');
 </style>
