@@ -63,5 +63,12 @@ export default {
   display: flex;
 }
 
+@media (max-width: 576px) {
+  .rightSide {
+    margin: 0 !important;
+  }
+}
+
 @import url('./assets/css/index.css');
+
 </style>

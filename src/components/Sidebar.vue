@@ -1,26 +1,26 @@
 <template>
     <div class="sidebar">
         <div class="title w-100">
-            <img src="../assets/logo.png" width="40" height="40" class="d-inline-block align-top me-2" alt="" />
-            <span class="d-inline d-sm-none d-md-none d-lg-inline">MONEYBRO</span>
+            <img src="../assets/logo.png" width="25" height="25" class="d-inline-block align-top" alt="" />
+            <span class="d-none d-sm-none d-md-none d-lg-inline ms-2">MONEYBRO</span>
         </div>
         <div class="sidebar_item">
-            <span class="me-2"><font-awesome-icon icon="fa-wallet" /></span><span class="d-inline d-sm-none d-md-none d-lg-inline">EXPENSES</span>
+            <span class="me-2 large-font-size"><font-awesome-icon icon="fa-wallet" /></span><span class="d-none d-sm-none d-md-none d-lg-inline">EXPENSES</span>
         </div>
         <div class="sidebar_item">
-            <span class="me-2"><font-awesome-icon icon="fa-circle-dollar-to-slot" /></span><span class="d-inline d-sm-none d-md-none d-lg-inline">INCOME</span>
+            <span class="me-2 large-font-size"><font-awesome-icon icon="fa-circle-dollar-to-slot" /></span><span class="d-none d-sm-none d-md-none d-lg-inline">INCOME</span>
         </div>
         <div class="sidebar_item">
-            <span class="me-2"><font-awesome-icon icon="fa fa-line-chart" /></span><span class="d-inline d-sm-none d-md-none d-lg-inline">ANALYSIS</span>
+            <span class="me-2 large-font-size"><font-awesome-icon icon="fa fa-line-chart" /></span><span class="d-none d-sm-none d-md-none d-lg-inline">ANALYSIS</span>
         </div>
         <div class="sidebar_item">
-            <span class="me-2"><font-awesome-icon icon="fa-credit-card" /></span><span class="d-inline d-sm-none d-md-none d-lg-inline">ACCOUNTS</span>
+            <span class="me-2 large-font-size"><font-awesome-icon icon="fa-credit-card" /></span><span class="d-none d-sm-none d-md-none d-lg-inline">ACCOUNTS</span>
         </div>
         <div class="sidebar_item">
-            <span class="me-2"><font-awesome-icon icon="fa-user-tie" /></span><span class="d-inline d-sm-none d-md-none d-lg-inline">USER</span>
+            <span class="me-2 large-font-size"><font-awesome-icon icon="fa-user-tie" /></span><span class="d-none d-sm-none d-md-none d-lg-inline">USER</span>
         </div>
-        <div class="sidebar_item sidebar_end">
-            <span class="me-2"><font-awesome-icon icon="fa-user-tie" /></span><span class="d-inline d-sm-none d-md-none d-lg-inline"  @click="this.$store.dispatch('logout')">LOGOUT</span>
+        <div class="sidebar_item sidebar_end" @click="this.$store.dispatch('logout')">
+            <span class="me-2 large-font-size"><font-awesome-icon icon="fa-user-tie" /></span><span class="d-none d-sm-none d-md-none d-lg-inline" >LOGOUT</span>
         </div>
     </div>
 </template>
@@ -37,7 +37,7 @@
 }
 
 .title {
-    padding: 30px;
+    padding: 25px;
     letter-spacing: 8px;
     font-weight: 600;
     font-size: 25px;
@@ -62,9 +62,10 @@
     bottom: 0;
 }
 
-@media (max-width: 375px) {
-  .sidebar {
-    width: 100% !important;
-  }
+@media only screen and (max-width: 576px) {
+    .sidebar{
+        width: 75px !important;
+    }
 }
+
 </style>
