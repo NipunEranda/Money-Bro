@@ -6,12 +6,15 @@
     <router-view class="container-body" />
   </div> -->
 
+  <Header class="appHeader d-none" v-if="showHeader"></Header>
   <div class="box">
     <div class="leftSide">
       <Sidebar v-if="showHeader"></Sidebar>
     </div>
     <div class="rightSide">
-      <div class="container-loader hidden"><div class="loader"></div></div>
+      <div class="container-loader hidden">
+        <div class="loader"></div>
+      </div>
       <router-view class="container-body" />
     </div>
     <Bottombar class="w-100" id="bottomBar" style="display: none;"></Bottombar>
@@ -47,14 +50,15 @@ export default {
 };
 </script>
 
-<style>
-.container-body{
+<style scoped>
+.container-body {
   margin: 0;
   padding: 0;
 }
 
 .leftSide {
   flex: 350px 0 0 0;
+  height: 100vh;
 }
 
 .rightSide {
@@ -71,11 +75,15 @@ export default {
   .rightSide {
     margin: 0 !important;
   }
-  .bottomBar{
+
+  .bottomBar {
     display: inline-flex !important;
+  }
+
+  .appHeader {
+    display: block !important;
   }
 }
 
 @import url('./assets/css/index.css');
-
 </style>

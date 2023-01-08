@@ -1,12 +1,12 @@
 <template>
     <div class="bottomBar row p-0 m-0">
-        <div class="col col-3 bottomBar_item"><span class="large-font-size"><font-awesome-icon icon="fa-sack-dollar" /></span><span
+        <div class="col col-3 bottomBar_item unselectable"><span class="large-font-size"><font-awesome-icon icon="fa-sack-dollar" /></span><span
                 class="ms-3 icon_text">BUDGET</span></div>
-        <div class="col col-3 bottomBar_item"><span class="large-font-size"><font-awesome-icon icon="fa fa-line-chart" /></span><span
+        <div class="col col-3 bottomBar_item unselectable"><span class="large-font-size"><font-awesome-icon icon="fa fa-line-chart" /></span><span
                 class="ms-3 icon_text">ANALYSIS</span></div>
-        <div class="col col-3 bottomBar_item"><span class="large-font-size"><font-awesome-icon icon="fa-credit-card" /></span><span
+        <div class="col col-3 bottomBar_item unselectable"><span class="large-font-size"><font-awesome-icon icon="fa-credit-card" /></span><span
                 class="ms-3 icon_text">ACCOUNTS</span></div>
-        <div class="col col-3 bottomBar_item"><span class="large-font-size"></span><font-awesome-icon icon="fa-user-tie" /><span
+        <div class="col col-3 bottomBar_item unselectable"><span class="large-font-size"></span><font-awesome-icon icon="fa-user-tie" /><span
                 class="ms-3 icon_text">USER</span></div>
     </div>
 </template>
