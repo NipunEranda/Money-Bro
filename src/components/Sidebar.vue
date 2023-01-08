@@ -28,12 +28,15 @@
 <style scoped>
 .sidebar {
     width: 350px;
-    position: absolute;
+    position: relative;
     bottom: 0;
     top: 0;
     background-color: #212529 !important;
     color: white;
-    height: auto;
+    height: 100vh;
+    overflow: scroll;
+    position: relative;
+    min-height: 570px;
 }
 
 .title {
@@ -58,8 +61,8 @@
 
 .sidebar_end{
     position: absolute;
-    width: 100%;
     bottom: 0;
+    width: 100%;
 }
 
 @media only screen and (max-width: 992px) {

@@ -57,6 +57,7 @@ export default {
 .rightSide {
   flex: 1;
   margin-left: 350px;
+  height: 100vh;
 }
 
 .box {
