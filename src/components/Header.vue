@@ -90,10 +90,10 @@ export default {
       this.user.balance = this.tempBalance;
     },
     ModalOperation: async function () {
-      const response = await axios.put(`/.netlify/functions/user/balance`, {}, {
+      await axios.put(`/.netlify/functions/user/balance`, {balance: this.user.balance}, {
         headers: { Authroization: `bearer ${this.user.token.toString()}` },
       });
-      console.log(response);
+      store.dispatch("updateUserBalance", this.user.balance);
       $('#balanceModal').modal("hide");
     }
   },

@@ -36,12 +36,12 @@ exports.saveUser = async (user) => {
     }
 };
 
-exports.verifyToken = function (req, res, next) {
+exports.verifyToken = function () {
     try {
         return ({
             before: (handler, next) => {
                 const bearerHeader = (handler.event.headers['authorization'] != undefined) ? handler.event.headers['authorization'] : (handler.event.headers.authroization != undefined) ? handler.event.headers.authroization : null;
-                if (typeof bearerHeader !== 'undefined') {
+                if (bearerHeader != null) {
                     const bearer = bearerHeader.split(' ');
                     const bearerToken = bearer[1];
                     jwt.verify(bearerToken, process.env.SECRET);
@@ -69,10 +69,10 @@ exports.verifyToken = function (req, res, next) {
     }
 }
 
-exports.getUserDataFromToken = function (req) {
+exports.getUserDataFromToken = function (event) {
     try {
-        const bearerHeader = req.headers.authroization;
-        if (typeof bearerHeader !== 'undefined') {
+        const bearerHeader = (event.headers['authorization'] != undefined) ? event.headers['authorization'] : (event.headers.authroization != undefined) ? event.headers.authroization : null;
+        if (bearerHeader != null) {
             const bearer = bearerHeader.split(' ');
             const bearerToken = bearer[1];
             const data = jwt.verify(bearerToken, process.env.SECRET);
@@ -89,7 +89,7 @@ const handler = async function (event, context) {
     try {
         var result = null;
         if (event.path == '/.netlify/functions/auth/google' && event.httpMethod == 'POST') {
-            result = await exports.saveUser({ sub: event.body.sub, name: event.body.name, email: event.body.email, avatar: event.body.picture });
+            result = await exports.saveUser({ sub: JSON.parse(event.body).sub, name: JSON.parse(event.body).name, email: JSON.parse(event.body).email, avatar: JSON.parse(event.body).picture });
         }
         return {
             statusCode: result ? result.status ? result.status : 500 : 500,
