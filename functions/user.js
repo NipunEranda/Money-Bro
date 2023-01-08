@@ -1,25 +1,10 @@
 'use strict';
-const express = require('express');
-const serverless = require('serverless-http');
-const bodyParser = require('body-parser');
-const moment = require('moment');
 const { MongoClient } = require("mongodb");
-const app = express();
 const auth = require('./auth');
+const middy = require('middy');
 
 const mongoClient = new MongoClient(process.env.MONGO_URL);
 const clientPromise = mongoClient.connect();
-
-app.get('/.netlify/functions/user/email', bodyParser.json(), async function (req, res) {
-    const result = await exports.getUserDetails(req, res);
-    res.status(result ? result.status ? result.status : 500 : 500).json(result ? result.response ? result.response : {} : {});
-});
-
-app.put('/.netlify/functions/user/balance', bodyParser.json, async function(req, res) {
-    const result = await exports.updateUserBalance(req, res);
-    console.log(result);
-    res.status(result ? result.status ? result.status : 500 : 500).json(result ? result.response ? result.response : {} : {});
-});
 
 exports.getUserDetails = async (req) => {
     try {
@@ -34,8 +19,9 @@ exports.getUserDetails = async (req) => {
     }
 }
 
-exports.updateUserBalance = async () => {
+exports.updateUserBalance = async (event) => {
     try {
+        console.log(event.body);
         return { status: 200, response: { data: [] } };
     } catch (e) {
         console.log(e);
@@ -43,4 +29,24 @@ exports.updateUserBalance = async () => {
     }
 }
 
-exports.handler = serverless(app);
+const handler = async function (event, context) {
+    try {
+        var result = null;
+        if (event.path == '/.netlify/functions/user/email' && event.httpMethod == 'GET') {
+            result = await exports.getUserDetails(req, res);
+        }else if (event.path == '/.netlify/functions/user/balance' && event.httpMethod == 'PUT') {
+            result = await exports.updateUserBalance(event);
+        }
+        return {
+            statusCode: result ? result.status ? result.status : 500 : 500,
+            body: JSON.stringify(result.response)
+        }
+    } catch (e) {
+        return {
+            statusCode: 500 || e.status,
+            body: e.message,
+        }
+    }
+}
+
+exports.handler = middy(handler).use(auth.verifyToken());
