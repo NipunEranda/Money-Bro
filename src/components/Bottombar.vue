@@ -6,7 +6,7 @@
                 class="ms-3 icon_text">ANALYSIS</span></div>
         <div class="col col-3 bottomBar_item unselectable"><span class="large-font-size"><font-awesome-icon icon="fa-credit-card" /></span><span
                 class="ms-3 icon_text">ACCOUNTS</span></div>
-        <div class="col col-3 bottomBar_item unselectable"><span class="large-font-size"></span><font-awesome-icon icon="fa-user-tie" /><span
+        <div class="col col-3 bottomBar_item unselectable"><span class="large-font-size"></span><font-awesome-icon icon="fa-id-badge" /><span
                 class="ms-3 icon_text">USER</span></div>
     </div>
 </template>

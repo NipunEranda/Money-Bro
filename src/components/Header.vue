@@ -1,17 +1,19 @@
 <template>
-    <div class="flex-container">
-        <div class="row nav p-0 m-0">
-            <div class="col col-8 title">
-                <img src="../assets/logo.png" width="30" height="30" class="d-inline-block align-top" alt="" />
-                <span class="text" style="letter-spacing: 8px"> MONEYBRO</span>
+    <div>
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark ps-0 pe-0">
+            <div class="container-fluid">
+                <router-link class="navbar-brand text" href="#" to="/home" style="letter-spacing: 8px">
+                    <img src="../assets/logo.png" width="30" height="30" class="d-inline-block align-top" alt="" />
+                    MONEYBRO
+                </router-link>
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item" data-bs-toggle="modal" data-bs-target="#balanceModal" @click="modalOpen()">
+                        <a class="nav-link text" href="#"><span class="me-2 d-md-none"></span>
+                            {{ formatToCurrency(user.balance, user.currency) }}</a>
+                    </li>
+                </ul>
             </div>
-            <div class="col col-4 title pointer" style="text-align: right;">
-                <span data-bs-toggle="modal" data-bs-target="#balanceModal" @click="modalOpen()"> {{
-                    formatToCurrency(user.balance, user.currency)
-                }}</span>
-            </div>
-        </div>
-
+        </nav>
 
         <!-- Modal -->
         <div class="modal fade" id="balanceModal" tabindex="-1" aria-labelledby="balanceModalLabel" aria-hidden="true">
@@ -42,28 +44,6 @@
     </div>
 
 </template>
-
-<style>
-.nav {
-    background-color: #212529 !important;
-    color: white;
-}
-
-.text {
-    /*font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;*/
-    font-family: 'Roboto', sans-serif;
-    font-weight: bolder;
-    font-style: normal;
-}
-
-.title {
-    padding: 15px 15px;
-}
-
-.balance {
-    vertical-align: middle;
-}
-</style>
 
 <script>
 import store from "../store";
@@ -102,3 +82,20 @@ export default {
     },
 };
 </script>
+
+<style scoped>
+.text {
+    /*font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;*/
+    font-family: 'Roboto', sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.nav-item {
+    text-decoration: none !important;
+}
+
+.navbar-brand {
+    font-weight: bolder;
+}
+</style>
