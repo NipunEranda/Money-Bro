@@ -33,6 +33,8 @@ exports.saveUser = async (user) => {
     } catch (e) {
         console.log(e);
         return { status: 500, response: { data: null, error: e } };
+    } finally {
+        mongoClient.close();
     }
 };
 

@@ -17,6 +17,8 @@ exports.getUserDetails = async (event) => {
     } catch (e) {
         console.log(e);
         return { status: 500, response: { data: null, error: err } };
+    } finally {
+        mongoClient.close();
     }
 }
 
@@ -32,6 +34,8 @@ exports.updateUserBalance = async (event) => {
     } catch (e) {
         console.log(e);
         return { status: 500, response: { data: null, error: err } };
+    } finally {
+        mongoClient.close();
     }
 }
 
