@@ -62,7 +62,7 @@
     bottom: 0;
 }
 
-@media only screen and (max-width: 576px) {
+@media only screen and (max-width: 992px) {
     .sidebar{
         width: 75px !important;
     }
