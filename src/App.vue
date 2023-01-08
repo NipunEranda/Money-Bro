@@ -14,6 +14,7 @@
       <div class="container-loader hidden"><div class="loader"></div></div>
       <router-view class="container-body" />
     </div>
+    <Bottombar class="w-100" id="bottomBar" style="display: none;"></Bottombar>
   </div>
 
 </template>
@@ -21,6 +22,7 @@
 <script>
 import Header from "@/components/Header.vue";
 import Sidebar from "./components/Sidebar.vue";
+import Bottombar from "./components/Bottombar.vue";
 import store from './store';
 import { useStore } from "vuex";
 export default {
@@ -39,7 +41,8 @@ export default {
   },
   components: {
     Header,
-    Sidebar
+    Sidebar,
+    Bottombar
   },
 };
 </script>
@@ -64,9 +67,12 @@ export default {
   display: flex;
 }
 
-@media (max-width: 576px) {
+@media (max-width: 992px) {
   .rightSide {
     margin: 0 !important;
+  }
+  .bottomBar{
+    display: inline-flex !important;
   }
 }
 
