@@ -22,7 +22,7 @@
         <ul class="navbar-nav ms-auto">
           <li class="nav-item" data-bs-toggle="modal" data-bs-target="#balanceModal" @click="modalOpen()"><a
               class="nav-link text" href="#"><span class="me-2 d-md-none"></span>
-              {{ user.balance }} {{ user.currency }}</a></li>
+              {{ formatToCurrency(user.balance, user.currency) }}</a></li>
           <ul class="navbar-nav">
             <li class="nav-item dropdown">
               <a class="nav-link" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown"
@@ -53,7 +53,11 @@
             @click="ModalClear()"></button>
         </div>
         <div class="modal-body">
-          <input type="number" class="form-control form-control-sm" id="balance" placeholder="Your current balance"
+          <label for="name" class="fieldLabel">Currency</label>
+          <input type="text" class="form-control form-control-sm fieldInput"  id="currency" placeholder="Your currency Eg: USD, EUR, JPY, LKR" v-model="user.currency" />
+
+          <label for="name" class="fieldLabel">Amount</label>
+          <input type="number" class="form-control form-control-sm fieldInput" id="balance" placeholder="Your current balance"
             v-model="user.balance" />
         </div>
         <div class="modal-footer">
@@ -69,6 +73,7 @@
 <script>
 import store from "../store";
 import { useStore } from "vuex";
+import utils from "../utils";
 export default {
   data() {
     return {
@@ -90,11 +95,14 @@ export default {
       this.user.balance = this.tempBalance;
     },
     ModalOperation: async function () {
-      await axios.put(`/.netlify/functions/user/balance`, {balance: this.user.balance}, {
+      await axios.put(`/.netlify/functions/user/balance`, {balance: this.user.balance, currency: this.user.currency}, {
         headers: { Authroization: `bearer ${this.user.token.toString()}` },
       });
       store.dispatch("updateUserBalance", this.user.balance);
       $('#balanceModal').modal("hide");
+    },
+    formatToCurrency: function(amount, currency){
+      return utils.currencyFormatter(amount, currency);
     }
   },
 };

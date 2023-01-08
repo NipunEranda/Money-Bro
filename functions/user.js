@@ -3,11 +3,11 @@ const { MongoClient } = require("mongodb");
 const auth = require('./auth');
 const middy = require('middy');
 
-const mongoClient = new MongoClient(process.env.MONGO_URL);
-const clientPromise = mongoClient.connect();
-
 exports.getUserDetails = async (event) => {
+    let mongoClient;
     try {
+        mongoClient = new MongoClient(process.env.MONGO_URL);
+        const clientPromise = mongoClient.connect();
         const data = auth.getUserDataFromToken(event);
         if (data) {
             const database = (await clientPromise).db(process.env.MONGO_DB);
@@ -17,21 +17,28 @@ exports.getUserDetails = async (event) => {
     } catch (e) {
         console.log(e);
         return { status: 500, response: { data: null, error: err } };
+    } finally {
+        mongoClient.close();
     }
 }
 
 exports.updateUserBalance = async (event) => {
+    let mongoClient;
     try {
+        mongoClient = new MongoClient(process.env.MONGO_URL);
+        const clientPromise = mongoClient.connect();
         const data = auth.getUserDataFromToken(event);
         if (data) {
             const database = (await clientPromise).db(process.env.MONGO_DB);
-            await database.collection('user').updateOne({ "email": data.user.email }, { $set: {balance: JSON.parse(event.body).balance } });
+            await database.collection('user').updateOne({ "email": data.user.email }, { $set: { balance: JSON.parse(event.body).balance, currency: JSON.parse(event.body).currency } });
             return { status: 200, response: { data: { success: true } } };
         }
         return null;
     } catch (e) {
         console.log(e);
         return { status: 500, response: { data: null, error: err } };
+    } finally {
+        mongoClient.close();
     }
 }
 

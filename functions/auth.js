@@ -4,11 +4,11 @@ const moment = require('moment');
 const { MongoClient } = require("mongodb");
 const middy = require('middy');
 
-const mongoClient = new MongoClient(process.env.MONGO_URL);
-const clientPromise = mongoClient.connect();
-
 exports.saveUser = async (user) => {
+    let mongoClient;
     try {
+        mongoClient = new MongoClient(process.env.MONGO_URL);
+        const clientPromise = mongoClient.connect();
         const database = (await clientPromise).db(process.env.MONGO_DB);
         const result = await database.collection('user').findOne({ email: user.email });
         let token = null;
@@ -33,6 +33,8 @@ exports.saveUser = async (user) => {
     } catch (e) {
         console.log(e);
         return { status: 500, response: { data: null, error: e } };
+    } finally {
+        mongoClient.close();
     }
 };
 
