@@ -1,7 +1,6 @@
 'use strict';
 const express = require('express');
 const jwt = require('jsonwebtoken');
-var crypto = require("crypto");
 const serverless = require('serverless-http');
 const bodyParser = require('body-parser');
 const moment = require('moment');
@@ -12,7 +11,7 @@ const mongoClient = new MongoClient(process.env.MONGO_URL);
 const clientPromise = mongoClient.connect();
 
 app.post('/.netlify/functions/auth/google', bodyParser.json(), async function (req, res) {
-    const result = await exports.saveUser({ sub: req.body.sub, name: req.body.name, email: req.body.email });
+    const result = await exports.saveUser({ sub: req.body.sub, name: req.body.name, email: req.body.email, avatar: req.body.picture });
     res.status(result ? result.status ? result.status : 500 : 500).json(result ? result.response ? result.response : {} : {});
 });
 
@@ -27,7 +26,7 @@ exports.saveUser = async (user) => {
             user.currency = 'USD';
             insertedU = await database.collection('user').insertOne(user);
             token = await new Promise((resolve, reject) => {
-                jwt.sign({ user: { id: insertedU.insertedId.toString(), name: user.name, email: user.email, created: moment(new Date()).format('YYYY-MM-DD'), balance: user.balance, currency: user.currency } }, process.env.SECRET, { expiresIn: '24h' }, (err, token) => {
+                jwt.sign({ user: { id: insertedU.insertedId.toString(), name: user.name, email: user.email, created: moment(new Date()).format('YYYY-MM-DD'), balance: user.balance, currency: user.currency, avatar: user.avatar } }, process.env.SECRET, { expiresIn: '24h' }, (err, token) => {
                     resolve(token);
                 })
             });

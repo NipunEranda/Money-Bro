@@ -11,31 +11,29 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarNavDropdown">
         <ul class="navbar-nav">
-          <router-link class="nav-item text" to="/categories"><a class="nav-link" href="#"><span
-                class="me-2 d-md-none"></span> EXPENSES</a></router-link>
-          <router-link class="nav-item text" to="/sale"><a class="nav-link" href="#"><span
-                class="me-2 d-md-none"></span> INCOME</a></router-link>
-          <router-link class="nav-item text" to="/sale"><a class="nav-link" href="#"><span
+          <router-link class="nav-item text" to="/budget"><a class="nav-link" href="#"><span
                 class="me-2 d-md-none"></span> BUDGET</a></router-link>
-          <router-link class="nav-item text" to="/sale"><a class="nav-link" href="#"><span
+          <router-link class="nav-item text" to="/analysis"><a class="nav-link" href="#"><span
                 class="me-2 d-md-none"></span> ANALYSIS</a></router-link>
           <!-- <router-link class="nav-item" to="/users"><a class="nav-link" href="#">Users</a></router-link> -->
         </ul>
       </div>
       <div class="collapse navbar-collapse" id="navbarNavDropdown">
         <ul class="navbar-nav ms-auto">
-          <li class="nav-item text" data-bs-toggle="modal" data-bs-target="#balanceModal"><a class="nav-link" href="#"><span class="me-2 d-md-none"></span>
-              BALANCE {{ user.currency }} {{ user.balance }}</a></li>
+          <li class="nav-item" data-bs-toggle="modal" data-bs-target="#balanceModal" @click="modalOpen()"><a
+              class="nav-link text" href="#"><span class="me-2 d-md-none"></span>
+              {{ user.balance }} {{ user.currency }}</a></li>
           <ul class="navbar-nav">
             <li class="nav-item dropdown">
               <a class="nav-link" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown"
                 aria-expanded="false">
-                <i class="fa fa-user d-none d-md-flex"></i><label class="d-md-none"><span class="me-2 d-md-none"></span>
+                <i class="fa fa-user d-none d-md-flex"></i><label class="d-md-none text"><span
+                    class="me-2 d-md-none"></span>
                   ACCOUNT</label>
               </a>
               <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
-                <li><a class="dropdown-item" href="#">{{ user ? user.name : "" }}</a></li>
-                <li><a class="dropdown-item" aria-current="page" @click="this.$store.dispatch('logout')"
+                <li><a class="dropdown-item text" href="#">{{ user ? user.name : "" }}</a></li>
+                <li><a class="dropdown-item text" aria-current="page" @click="this.$store.dispatch('logout')"
                     style="cursor: pointer">Logout</a></li>
               </ul>
             </li>
@@ -51,14 +49,16 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="balanceModalLabel">Update Balance</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+            @click="ModalClear()"></button>
         </div>
         <div class="modal-body">
-          <input type="number" class="form-control form-control-sm" id="balance" placeholder="Your current balance" v-model="user.balance" />
+          <input type="number" class="form-control form-control-sm" id="balance" placeholder="Your current balance"
+            v-model="user.balance" />
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Update</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="ModalClear()">Close</button>
+          <button type="button" class="btn btn-primary" @click="ModalOperation()">Update</button>
         </div>
       </div>
     </div>
@@ -74,6 +74,7 @@ export default {
     return {
       store: useStore(),
       user: store.getters.getCurrentUser,
+      tempBalance: 0,
     };
   },
   watch: {
@@ -82,6 +83,19 @@ export default {
     },
   },
   methods: {
+    modalOpen: function () {
+      this.tempBalance = this.user.balance;
+    },
+    ModalClear: function () {
+      this.user.balance = this.tempBalance;
+    },
+    ModalOperation: async function () {
+      const response = await axios.put(`/.netlify/functions/user/balance`, {}, {
+        headers: { Authroization: `bearer ${this.user.token.toString()}` },
+      });
+      console.log(response);
+      $('#balanceModal').modal("hide");
+    }
   },
 };
 </script>

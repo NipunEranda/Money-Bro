@@ -15,6 +15,12 @@ app.get('/.netlify/functions/user/email', bodyParser.json(), async function (req
     res.status(result ? result.status ? result.status : 500 : 500).json(result ? result.response ? result.response : {} : {});
 });
 
+app.put('/.netlify/functions/user/balance', bodyParser.json, async function(req, res) {
+    const result = await exports.updateUserBalance(req, res);
+    console.log(result);
+    res.status(result ? result.status ? result.status : 500 : 500).json(result ? result.response ? result.response : {} : {});
+});
+
 exports.getUserDetails = async (req) => {
     try {
         const data = auth.getUserDataFromToken(req);
@@ -22,6 +28,15 @@ exports.getUserDetails = async (req) => {
             const database = (await clientPromise).db(process.env.MONGO_DB);
             return await database.collection('user').findOne({ "email": data.user.email });
         }
+    } catch (e) {
+        console.log(e);
+        return { status: 500, response: { data: null, error: err } };
+    }
+}
+
+exports.updateUserBalance = async () => {
+    try {
+        return { status: 200, response: { data: [] } };
     } catch (e) {
         console.log(e);
         return { status: 500, response: { data: null, error: err } };
