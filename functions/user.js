@@ -30,7 +30,7 @@ exports.updateUserBalance = async (event) => {
         const data = auth.getUserDataFromToken(event);
         if (data) {
             const database = (await clientPromise).db(process.env.MONGO_DB);
-            await database.collection('user').updateOne({ "email": data.user.email }, { $set: { balance: JSON.parse(event.body).balance } });
+            await database.collection('user').updateOne({ "email": data.user.email }, { $set: { balance: JSON.parse(event.body).balance, currency: JSON.parse(event.body).currency } });
             return { status: 200, response: { data: { success: true } } };
         }
         return null;
