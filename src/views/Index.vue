@@ -73,6 +73,7 @@ export default {
                     token: res.data.data.token,
                     balance: res.data.data.user.balance,
                     currency: res.data.data.user.currency,
+                    avatar: response.data.picture,
                     loggedIn: new Date(),
                   });
                   if (store.getters.getRedirectUrl)

@@ -1,31 +1,58 @@
 'use strict';
-const express = require('express');
-const serverless = require('serverless-http');
-const bodyParser = require('body-parser');
-const moment = require('moment');
 const { MongoClient } = require("mongodb");
-const app = express();
 const auth = require('./auth');
+const middy = require('middy');
 
 const mongoClient = new MongoClient(process.env.MONGO_URL);
 const clientPromise = mongoClient.connect();
 
-app.get('/.netlify/functions/user/email', bodyParser.json(), async function (req, res) {
-    const result = await exports.getUserDetails(req, res);
-    res.status(result ? result.status ? result.status : 500 : 500).json(result ? result.response ? result.response : {} : {});
-});
-
-exports.getUserDetails = async (req) => {
+exports.getUserDetails = async (event) => {
     try {
-        const data = auth.getUserDataFromToken(req);
+        const data = auth.getUserDataFromToken(event);
         if (data) {
             const database = (await clientPromise).db(process.env.MONGO_DB);
             return await database.collection('user').findOne({ "email": data.user.email });
         }
+        return null;
     } catch (e) {
         console.log(e);
         return { status: 500, response: { data: null, error: err } };
     }
 }
 
-exports.handler = serverless(app);
+exports.updateUserBalance = async (event) => {
+    try {
+        const data = auth.getUserDataFromToken(event);
+        if (data) {
+            const database = (await clientPromise).db(process.env.MONGO_DB);
+            await database.collection('user').updateOne({ "email": data.user.email }, { $set: {balance: JSON.parse(event.body).balance } });
+            return { status: 200, response: { data: { success: true } } };
+        }
+        return null;
+    } catch (e) {
+        console.log(e);
+        return { status: 500, response: { data: null, error: err } };
+    }
+}
+
+const handler = async function (event, context) {
+    try {
+        var result = null;
+        if (event.path == '/.netlify/functions/user/email' && event.httpMethod == 'GET') {
+            result = await exports.getUserDetails(event);
+        } else if (event.path == '/.netlify/functions/user/balance' && event.httpMethod == 'PUT') {
+            result = await exports.updateUserBalance(event);
+        }
+        return {
+            statusCode: result ? result.status ? result.status : 500 : 500,
+            body: JSON.stringify(result.response)
+        }
+    } catch (e) {
+        return {
+            statusCode: 500 || e.status,
+            body: e.message,
+        }
+    }
+}
+
+exports.handler = middy(handler).use(auth.verifyToken());

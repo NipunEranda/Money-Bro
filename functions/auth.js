@@ -1,20 +1,11 @@
 'use strict';
-const express = require('express');
 const jwt = require('jsonwebtoken');
-var crypto = require("crypto");
-const serverless = require('serverless-http');
-const bodyParser = require('body-parser');
 const moment = require('moment');
 const { MongoClient } = require("mongodb");
-const app = express();
+const middy = require('middy');
 
 const mongoClient = new MongoClient(process.env.MONGO_URL);
 const clientPromise = mongoClient.connect();
-
-app.post('/.netlify/functions/auth/google', bodyParser.json(), async function (req, res) {
-    const result = await exports.saveUser({ sub: req.body.sub, name: req.body.name, email: req.body.email });
-    res.status(result ? result.status ? result.status : 500 : 500).json(result ? result.response ? result.response : {} : {});
-});
 
 exports.saveUser = async (user) => {
     try {
@@ -27,7 +18,7 @@ exports.saveUser = async (user) => {
             user.currency = 'USD';
             insertedU = await database.collection('user').insertOne(user);
             token = await new Promise((resolve, reject) => {
-                jwt.sign({ user: { id: insertedU.insertedId.toString(), name: user.name, email: user.email, created: moment(new Date()).format('YYYY-MM-DD'), balance: user.balance, currency: user.currency } }, process.env.SECRET, { expiresIn: '24h' }, (err, token) => {
+                jwt.sign({ user: { id: insertedU.insertedId.toString(), name: user.name, email: user.email, created: moment(new Date()).format('YYYY-MM-DD'), balance: user.balance, currency: user.currency, avatar: user.avatar } }, process.env.SECRET, { expiresIn: '24h' }, (err, token) => {
                     resolve(token);
                 })
             });
@@ -45,31 +36,43 @@ exports.saveUser = async (user) => {
     }
 };
 
-exports.verifyToken = function (req, res, next) {
+exports.verifyToken = function () {
     try {
-        const bearerHeader = req.headers.authroization;
-        if (typeof bearerHeader !== 'undefined') {
-            const bearer = bearerHeader.split(' ');
-            const bearerToken = bearer[1];
-            jwt.verify(bearerToken, process.env.SECRET);
-            next();
-        } else {
-            throw { status: 403, message: 'Access Denied' };
-        }
+        return ({
+            before: (handler, next) => {
+                const bearerHeader = (handler.event.headers['authorization'] != undefined) ? handler.event.headers['authorization'] : (handler.event.headers.authroization != undefined) ? handler.event.headers.authroization : null;
+                if (bearerHeader != null) {
+                    const bearer = bearerHeader.split(' ');
+                    const bearerToken = bearer[1];
+                    jwt.verify(bearerToken, process.env.SECRET);
+                    next();
+                }else{
+                    return handler.callback(null, {
+                        statusCode: 403,
+                        body: JSON.stringify({
+                            auth: 'no',
+                            message: 'Access Denied'
+                        })
+                    });
+                }
+            }
+        });
     } catch (e) {
         if (e.name === 'TokenExpiredError') {
-            res.status(500).json({ data: null, error: 'Token Expired' });
-        } else {
-            console.log(e);
-            res.status(e.status).json({ data: null, error: e.message });
+            e.message = 'Token Expired';
         }
+        console.log(e);
+        return handler.callback(null, {
+            statusCode: 403,
+            body: JSON.stringify({})
+        });
     }
 }
 
-exports.getUserDataFromToken = function (req) {
+exports.getUserDataFromToken = function (event) {
     try {
-        const bearerHeader = req.headers.authroization;
-        if (typeof bearerHeader !== 'undefined') {
+        const bearerHeader = (event.headers['authorization'] != undefined) ? event.headers['authorization'] : (event.headers.authroization != undefined) ? event.headers.authroization : null;
+        if (bearerHeader != null) {
             const bearer = bearerHeader.split(' ');
             const bearerToken = bearer[1];
             const data = jwt.verify(bearerToken, process.env.SECRET);
@@ -82,4 +85,22 @@ exports.getUserDataFromToken = function (req) {
     }
 }
 
-exports.handler = serverless(app);
+const handler = async function (event, context) {
+    try {
+        var result = null;
+        if (event.path == '/.netlify/functions/auth/google' && event.httpMethod == 'POST') {
+            result = await exports.saveUser({ sub: JSON.parse(event.body).sub, name: JSON.parse(event.body).name, email: JSON.parse(event.body).email, avatar: JSON.parse(event.body).picture });
+        }
+        return {
+            statusCode: result ? result.status ? result.status : 500 : 500,
+            body: JSON.stringify(result.response)
+        }
+    } catch (e) {
+        return {
+            statusCode: 500 || e.status,
+            body: e.message,
+        }
+    }
+}
+
+exports.handler = middy(handler);
