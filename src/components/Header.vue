@@ -11,6 +11,9 @@
                         <a class="nav-link text" href="#"><span class="me-2 d-md-none"></span>
                             {{ formatToCurrency(user.balance, user.currency) }}</a>
                     </li>
+                    <li class="nav-item" data-bs-toggle="modal" data-bs-target="#balanceModal" @click="modalOpen()">
+                        <a class="nav-link text" href="#"><span class="me-2 d-md-none"></span>a</a>
+                    </li>
                 </ul>
             </div>
         </nav>

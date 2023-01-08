@@ -17,7 +17,7 @@
       </div>
       <router-view class="container-body" />
     </div>
-    <Bottombar class="w-100" id="bottomBar" style="display: none;"></Bottombar>
+    <Bottombar v-if="showHeader" class="w-100" id="bottomBar" style="display: none;"></Bottombar>
   </div>
 
 </template>
