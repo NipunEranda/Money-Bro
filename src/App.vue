@@ -58,7 +58,6 @@ export default {
 
 .leftSide {
   flex: 350px 0 0 0;
-  height: 100vh;
 }
 
 .rightSide {

@@ -1,11 +1,11 @@
 <template>
     <div class="flex-container">
         <div class="row nav p-0 m-0">
-            <div class="col col-6 title">
+            <div class="col col-8 title">
                 <img src="../assets/logo.png" width="30" height="30" class="d-inline-block align-top" alt="" />
                 <span class="text" style="letter-spacing: 8px"> MONEYBRO</span>
             </div>
-            <div class="col col-6 title pointer" style="text-align: right;">
+            <div class="col col-4 title pointer" style="text-align: right;">
                 <span data-bs-toggle="modal" data-bs-target="#balanceModal" @click="modalOpen()"> {{
                     formatToCurrency(user.balance, user.currency)
                 }}</span>
