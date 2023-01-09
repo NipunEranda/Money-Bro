@@ -4,7 +4,7 @@
             <div class="container-fluid">
                 <router-link class="navbar-brand text" href="#" to="/home" style="letter-spacing: 8px">
                     <img src="../assets/logo.png" width="30" height="30" class="d-inline-block align-top" alt="" />
-                    MONEYBRO
+                    <span class="ms-2 d-none d-sm-inline d-lg-inline">MONEYBRO</span>
                 </router-link>
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item" data-bs-toggle="modal" data-bs-target="#balanceModal" @click="modalOpen()">

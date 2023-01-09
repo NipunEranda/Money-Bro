@@ -1,45 +1,55 @@
 <template>
     <div class="bottomBar row p-0 m-0">
-        <div class="col col-2 bottomBar_item unselectable">
-            <div>
-                <span class="large-font-size"><font-awesome-icon icon="fa-wallet" /></span>
+        <router-link class="text col col-2 p-0 m-0 " to="/expenses">
+            <div class="bottomBar_item unselectable">
+                <div>
+                    <span class="large-font-size"><font-awesome-icon icon="fa-wallet" /></span>
+                </div>
+                <div>
+                    <span class="icon_text">Expenses</span>
+                </div>
             </div>
-            <div>
-                <span class="icon_text">Expenses</span>
+        </router-link>
+        <router-link class="text col col-2 p-0 m-0 " to="/income">
+            <div class="bottomBar_item unselectable">
+                <div>
+                    <span class="large-font-size"><font-awesome-icon icon="fa-sack-dollar" /></span>
+                </div>
+                <div>
+                    <span class="icon_text">Income</span>
+                </div>
             </div>
-        </div>
-        <div class="col col-2 bottomBar_item unselectable">
-            <div>
-                <span class="large-font-size"><font-awesome-icon icon="fa-sack-dollar" /></span>
+        </router-link>
+        <router-link class="text col col-2 p-0 m-0 " to="/analysis">
+            <div class="bottomBar_item unselectable">
+                <div>
+                    <span class="large-font-size"><font-awesome-icon icon="fa fa-line-chart" /></span>
+                </div>
+                <div>
+                    <span class="icon_text">ANALYSIS</span>
+                </div>
             </div>
-            <div>
-                <span class="icon_text">Income</span>
+        </router-link>
+        <router-link class="text col col-2 p-0 m-0 " to="/accounts">
+            <div class="bottomBar_item unselectable">
+                <div>
+                    <span class="large-font-size"><font-awesome-icon icon="fa-credit-card" /></span>
+                </div>
+                <div>
+                    <span class="icon_text">ACCOUNTS</span>
+                </div>
             </div>
-        </div>
-        <div class="col col-2 bottomBar_item unselectable">
-            <div>
-                <span class="large-font-size"><font-awesome-icon icon="fa fa-line-chart" /></span>
-            </div>
-            <div>
-                <span class="icon_text">ANALYSIS</span>
-            </div>
-        </div>
-        <div class="col col-2 bottomBar_item unselectable">
-            <div>
-                <span class="large-font-size"><font-awesome-icon icon="fa-credit-card" /></span>
-            </div>
-            <div>
-                <span class="icon_text">ACCOUNTS</span>
-            </div>
-        </div>
-        <div class="col col-2 bottomBar_item unselectable">
-            <div>
-                <span class="large-font-size"><font-awesome-icon icon="fa-id-badge" /></span>
-            </div>
-            <div>
+        </router-link>
+        <router-link class="text col col-2 p-0 m-0 " to="/user">
+            <div class="bottomBar_item unselectable">
+                <div>
+                    <span class="large-font-size"><font-awesome-icon icon="fa-id-badge" /></span>
+                </div>
+                <div>
                     <span class="icon_text">USER</span>
+                </div>
             </div>
-        </div>
+        </router-link>
         <div class="col col-2 bottomBar_item unselectable" @click="this.$store.dispatch('logout')">
             <div>
                 <span class="large-font-size"><font-awesome-icon icon="fa-power-off" /></span>
@@ -58,6 +68,11 @@
     background-color: #212529 !important;
     color: white;
     text-align: center;
+}
+
+.text {
+    text-decoration: none;
+    color: white;
 }
 
 .bottomBar_item {

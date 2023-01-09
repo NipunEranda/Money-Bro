@@ -1,8 +1,16 @@
 <template>
-  <div class="container">
+  <!-- <div class="container">
+    <center>
+      <img class="login-logo" src="../assets/logo.png" width="200" />
+      <div class="container">
+        <div id="googleBtn" style="margin: auto"></div>
+      </div>
+    </center>
+  </div> -->
+  <div class="flex-container">
     <div class="row" style="padding-top: 150px; padding-bottom: 40px">
       <div class="col-12">
-        <img class="login-logo" src="../assets/logo.png" width="200" />
+        <img class="login-logo" src="../assets/logo.png"  />
       </div>
     </div>
     <div class="container">
@@ -29,7 +37,7 @@ import router from "../router";
 import { useStore } from "vuex";
 import store from "../store";
 export default {
-  setup: () => {},
+  setup: () => { },
   data() {
     return {
       store: useStore(),

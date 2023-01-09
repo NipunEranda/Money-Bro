@@ -1,30 +1,48 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home.vue';
 import Index from '../views/Index.vue';
-import Budget from '../views/Budget.vue';
+import Income from '../views/Income.vue';
+import Expenses from '../views/Expenses.vue';
 import Analysis from '../views/Analysis.vue';
+import Accounts from '../views/Accounts.vue';
+import User from '../views/User.vue';
 import store from '../store';
 
 const routes = [
-  {
-    path: '/home',
-    name: 'home',
-    component: Home
-  },
   {
     path: '/',
     name: 'index',
     component: Index
   },
   {
-    path: '/budget',
-    name: 'budget',
-    component: Budget
+    path: '/home',
+    name: 'home',
+    component: Home
+  },
+  {
+    path: '/expenses',
+    name: 'expenses',
+    component: Expenses
+  },
+  {
+    path: '/income',
+    name: 'income',
+    component: Income
   },
   {
     path: '/analysis',
     name: 'analysis',
     component: Analysis
+  },
+  {
+    path: '/accounts',
+    name: 'accounts',
+    component: Accounts
+  },
+  {
+    path: '/user',
+    name: 'user',
+    component: User
   },
 ]
 
