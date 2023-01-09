@@ -150,3 +150,12 @@ tr {
 .text-white {
     color: white;
 }
+
+.modal-header, .modal-footer{
+    background-color: #212529;
+    color: white;
+}
+
+.modal-header .btn-close{
+    color: white;
+}

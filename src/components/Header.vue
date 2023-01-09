@@ -19,10 +19,9 @@
         <div class="modal fade" id="balanceModal" tabindex="-1" aria-labelledby="balanceModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
-                    <div class="modal-header">
+                    <div class="modal-header unselectable">
                         <h5 class="modal-title" id="balanceModalLabel">Update Balance</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
-                            @click="ModalClear()"></button>
+                        <span class="pointer" data-bs-dismiss="modal" aria-label="Close" @click="ModalClear()"><font-awesome-icon icon="fa-close" /></span>
                     </div>
                     <div class="modal-body">
                         <label for="name" class="fieldLabel">Currency</label>
@@ -33,10 +32,10 @@
                         <input type="number" class="form-control form-control-sm fieldInput" id="balance"
                             placeholder="Your current balance" v-model="user.balance" />
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                    <div class="modal-footer pt-1 pb-1">
+                        <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal"
                             @click="ModalClear()">Close</button>
-                        <button type="button" class="btn btn-primary" @click="ModalOperation()">Update</button>
+                        <button type="button" class="btn btn-sm btn-primary" @click="ModalOperation()">Update</button>
                     </div>
                 </div>
             </div>
