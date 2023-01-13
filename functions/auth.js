@@ -16,7 +16,50 @@ exports.saveUser = async (user) => {
         if (!result) {
             user.balance = 0;
             user.currency = 'USD';
-            insertedU = await database.collection('user').insertOne(user);
+            user.expenseTypes = [],
+            user.incomeTypes = [],
+            user.accountTypes = [{
+                id: 1,
+                name: 'General',
+                icon: 'fa-coins'
+            },
+            {
+                id: 2,
+                name: 'Debit Card',
+                icon: 'fa-credit-card'
+            },
+            {
+                id: 3,
+                name: 'Credit Card',
+                icon: 'fa-credit-bank'
+            },
+            {
+                id: 4,
+                name: 'Cash',
+                icon: 'fa-money-bill'
+            },
+            {
+                id: 5,
+                name: 'Wallet',
+                icon: 'fa-wallet'
+            },
+            {
+                id: 6,
+                name: 'Saving Account',
+                icon: 'fa-piggy-bank'
+            },
+            {
+                id: 7,
+                name: 'Bank',
+                icon: 'fa-building-columns'
+            },
+            {
+                id: 8,
+                name: 'Vault',
+                icon: 'fa-vault'
+            },
+            ];
+            insertedU = await database.collection('users').insertOne(user);
             token = await new Promise((resolve, reject) => {
                 jwt.sign({ user: { id: insertedU.insertedId.toString(), name: user.name, email: user.email, created: moment(new Date()).format('YYYY-MM-DD'), balance: user.balance, currency: user.currency, avatar: user.avatar } }, process.env.SECRET, { expiresIn: '24h' }, (err, token) => {
                     resolve(token);
@@ -48,7 +91,7 @@ exports.verifyToken = function () {
                     const bearerToken = bearer[1];
                     jwt.verify(bearerToken, process.env.SECRET);
                     next();
-                }else{
+                } else {
                     return handler.callback(null, {
                         statusCode: 403,
                         body: JSON.stringify({

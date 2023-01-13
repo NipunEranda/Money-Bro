@@ -11,8 +11,8 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 /* import specific icons */
-import { faWallet, faCircleDollarToSlot, faChartLine, faUserTie, faCreditCard, faSackDollar, faUser, faIdBadge, faPowerOff, faPlus, faClose } from '@fortawesome/free-solid-svg-icons';
+import { faWallet, faCircleDollarToSlot, faChartLine, faUserTie, faCreditCard, faSackDollar, faUser, faIdBadge, faPowerOff, faPlus, faClose, faCoins, faMoneyBill, faPiggyBank, faBuildingColumns, faVault } from '@fortawesome/free-solid-svg-icons';
 
-library.add(faWallet, faCircleDollarToSlot, faChartLine, faUserTie, faCreditCard, faSackDollar, faUser, faIdBadge, faPowerOff, faPlus, faClose);
+library.add(faWallet, faCircleDollarToSlot, faChartLine, faUserTie, faCreditCard, faSackDollar, faUser, faIdBadge, faPowerOff, faPlus, faClose, faCoins, faMoneyBill, faPiggyBank, faBuildingColumns, faVault);
 
 createApp(App).use(store).use(router).component('font-awesome-icon', FontAwesomeIcon).mount('#app');

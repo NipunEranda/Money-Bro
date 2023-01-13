@@ -81,6 +81,9 @@ export default {
                     token: res.data.data.token,
                     balance: res.data.data.user.balance,
                     currency: res.data.data.user.currency,
+                    accountTypes: res.data.data.user.accountTypes,
+                    expenseTypes: res.data.data.user.expenseTypes,
+                    incomeTypes: res.data.data.user.incomeTypes,
                     avatar: response.data.picture,
                     loggedIn: new Date(),
                   });

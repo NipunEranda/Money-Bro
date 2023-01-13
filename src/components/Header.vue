@@ -24,10 +24,12 @@
                         <span class="pointer" data-bs-dismiss="modal" aria-label="Close" @click="ModalClear()"><font-awesome-icon icon="fa-close" /></span>
                     </div>
                     <div class="modal-body">
+                        <!-- Currency Type -->
                         <label for="name" class="fieldLabel">Currency</label>
                         <input type="text" class="form-control form-control-sm fieldInput" id="currency"
                             placeholder="Your currency Eg: USD, EUR, JPY, LKR" v-model="user.currency" />
 
+                        <!-- Complete Amount -->
                         <label for="name" class="fieldLabel">Amount</label>
                         <input type="number" class="form-control form-control-sm fieldInput" id="balance"
                             placeholder="Your current balance" v-model="user.balance" />
