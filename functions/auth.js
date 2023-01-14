@@ -10,7 +10,7 @@ exports.saveUser = async (user) => {
         mongoClient = new MongoClient(process.env.MONGO_URL);
         const clientPromise = mongoClient.connect();
         const database = (await clientPromise).db(process.env.MONGO_DB);
-        const result = await database.collection('user').findOne({ email: user.email });
+        const result = await database.collection('users').findOne({ email: user.email });
         let token = null;
         let insertedU = null;
         if (!result) {
@@ -61,7 +61,7 @@ exports.saveUser = async (user) => {
             ];
             insertedU = await database.collection('users').insertOne(user);
             token = await new Promise((resolve, reject) => {
-                jwt.sign({ user: { id: insertedU.insertedId.toString(), name: user.name, email: user.email, created: moment(new Date()).format('YYYY-MM-DD'), balance: user.balance, currency: user.currency, avatar: user.avatar } }, process.env.SECRET, { expiresIn: '24h' }, (err, token) => {
+                jwt.sign({ user: { _id: insertedU.insertedId.toString(), name: user.name, email: user.email, created: moment(new Date()).format('YYYY-MM-DD'), balance: user.balance, currency: user.currency, avatar: user.avatar } }, process.env.SECRET, { expiresIn: '24h' }, (err, token) => {
                     resolve(token);
                 })
             });
