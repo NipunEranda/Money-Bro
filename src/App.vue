@@ -5,19 +5,20 @@
     <Sidebar v-if="showHeader"></Sidebar>
     <router-view class="container-body" />
   </div> -->
-
-  <Header class="appHeader d-none" v-if="showHeader"></Header>
-  <div class="box">
-    <div class="leftSide">
-      <Sidebar v-if="showHeader"></Sidebar>
-    </div>
-    <div class="rightSide">
-      <div class="container-loader hidden">
-        <div class="loader"></div>
+  <div style="max-height: 100vh;overflow: auto;padding-bottom:75px">
+    <Header class="appHeader d-none" v-if="showHeader"></Header>
+    <div class="box">
+      <div class="leftSide">
+        <Sidebar v-if="showHeader"></Sidebar>
       </div>
-      <router-view class="container-body" />
+      <div class="rightSide">
+        <div class="container-loader hidden">
+          <div class="loader"></div>
+        </div>
+        <router-view class="container-body" />
+      </div>
+      <Bottombar v-if="showHeader" class="w-100" id="bottomBar" style="display: none;"></Bottombar>
     </div>
-    <Bottombar v-if="showHeader" class="w-100" id="bottomBar" style="display: none;"></Bottombar>
   </div>
 
 </template>
@@ -81,6 +82,7 @@ export default {
   .appHeader {
     display: block !important;
   }
+
 }
 
 @import url('./assets/css/index.css');

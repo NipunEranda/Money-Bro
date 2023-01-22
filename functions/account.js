@@ -1,5 +1,5 @@
 'use strict';
-const { MongoClient } = require("mongodb");
+const { MongoClient, ObjectId } = require("mongodb");
 const auth = require('./auth');
 const middy = require('middy');
 
@@ -30,11 +30,19 @@ exports.addAccount = async (event) => {
         const data = auth.getUserDataFromToken(event);
         const database = (await clientPromise).db(process.env.MONGO_DB);
         if (data) {
-            console.log(data.user);
             const account = JSON.parse(event.body);
             account.user = data.user._id;
+
+            //Insert account
             await database.collection('accounts').insertOne(account);
-            await database.collection('users').updateOne({ "email": data.user.email }, { $set: { balance: (data.user.balance + account.amount), currency: data.user.currency } });
+
+            //Get user
+            const user = await database.collection('users').findOne({ email: data.user.email });
+
+            //Update user balance
+            await database.collection('users').updateOne({ "email": data.user.email }, { $set: { balance: (user.balance + account.amount), currency: data.user.currency } });
+           
+            //Return data
             return { status: 200, response: { data: { accounts: await database.collection('accounts').find({ user: data.user._id }).toArray(), user: await database.collection('users').findOne({ email: data.user.email }) }, error: null } };
         }
         return { status: 500, response: { data: null, error: 'something went wrong' } };
@@ -54,7 +62,24 @@ exports.deleteAccount = async (event) => {
         const data = auth.getUserDataFromToken(event);
         const database = (await clientPromise).db(process.env.MONGO_DB);
         if (data) {
-            console.log(event);
+            
+            //Get account
+            const account = await database.collection('accounts').findOne({_id: ObjectId(event.queryStringParameters.id)});
+
+            //Remove account
+            const result = await database.collection('accounts').deleteOne({ _id: ObjectId(event.queryStringParameters.id) });
+            if (result.deletedCount === 1) {
+                //Get user
+                const user = await database.collection('users').findOne({ email: data.user.email });
+
+                //Update user balance
+                await database.collection('users').updateOne({ "email": data.user.email }, { $set: { balance: (user.balance - account.amount), currency: data.user.currency } });
+
+                //Return data
+                return { status: 200, response: { data: { accounts: await database.collection('accounts').find({ user: data.user._id }).toArray(), user: await database.collection('users').findOne({ email: data.user.email }) }, error: null } };
+            } else {
+                return { status: 500, response: { data: null, error: 'something went wrong' } };
+            }
         }
         return { status: 500, response: { data: null, error: 'something went wrong' } };
     } catch (e) {
@@ -72,7 +97,7 @@ const handler = async function (event, context) {
             result = await exports.addAccount(event);
         } else if (event.path == '/.netlify/functions/account/get' && event.httpMethod == 'GET') {
             result = await exports.getAccounts(event);
-        } else if(event.path == '/.netlify/functions/account/delete' && evemt.httpMethod == 'DELETE'){
+        } else if(event.path == '/.netlify/functions/account/delete' && event.httpMethod == 'DELETE'){
             result = await exports.deleteAccount(event);
         }
         return {

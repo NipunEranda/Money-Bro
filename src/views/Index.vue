@@ -30,6 +30,9 @@
   text-align: center;
   display: grid;
 }
+.flex-container{
+  height: 100vh;
+}
 </style>
 
 <script>

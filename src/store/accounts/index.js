@@ -28,26 +28,20 @@ export default {
         resetState(state) {
             Object.assign(state, getDefaultState());
         },
-        addAccount(state, data) {
-            //Operation
-        },
-        updateAccount(state, data) {
-            //Operation
-        },
-        deleteAccount(state, data) {
-            //Operation
+        setAccounts(state, data) {
+            state.Accounts = data;
         },
     },
     actions: {
         resetState({ commit }) {
             commit('resetState')
         },
-        async addAccount({ }, data) {
-            //context.commit("addAccount", data);
+        async addAccount(context, data) {
             try {
                 const response = await axios.post('/.netlify/functions/account/add', data, {
                     headers: { Authroization: `bearer ${index.state.auth.currentUser.token.toString()}` },
                 });
+                context.commit("setAccounts", response.data.data.Accounts);
                 return response.data;
             } catch (e) {
                 console.log(e);
@@ -57,8 +51,17 @@ export default {
         updateAccount(context, data) {
             context.commit("updateAccount", data);
         },
-        deleteAccount(context, data) {
-            context.commit("deleteAccount", data);
+        async deleteAccount(context, data) {
+            try {
+                const response = await axios.delete(`/.netlify/functions/account/delete?id=${data._id}`, {
+                    headers: { Authroization: `bearer ${index.state.auth.currentUser.token.toString()}` },
+                });
+                context.commit("setAccounts", response.data.data.Accounts);
+                return response.data;
+            } catch (e) {
+                console.log(e);
+                return helper.methods.handleError(e);
+            }
         },
     }
 }

@@ -25,7 +25,7 @@
                             <div v-text="account.number" ></div>
                         </div>
                         <div class="accountAmount">
-                            <span><span style="vertical-align:middle" v-text="formatToCurrency(account.amount, user.currency)"></span><button style="float: right;vertical-align:middle;" class="btn btn-sm btn-danger" @click="ModalOperation('delete')">Delete</button></span>
+                            <span><span style="vertical-align:middle" v-text="formatToCurrency(account.amount, user.currency)"></span><button style="float: right;vertical-align:middle;" class="btn btn-sm btn-danger" @click="modalOpen('delete', account)">Delete</button></span>
                         </div>
                     </div>
                 </div>
@@ -34,7 +34,7 @@
 
         <!-- Modal -->
         <div class="modal fade" id="accountsModal" tabindex="-1">
-            <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-dialog modal-dialog-centered" :class="{ 'modal-md': modalOperation == 'delete', 'modal-lg': !(modalOperation == 'delete') }">
                 <div class="modal-content">
                     <div class="modal-header unselectable">
                         <h5 class="modal-title" id="accountsModalLabel">Add Account</h5>
@@ -43,30 +43,35 @@
                     </div>
                     <div class="modal-body">
                         <!-- Account Name -->
-                        <label for="name" class="fieldLabel">Name</label>
-                        <input type="text" class="form-control form-control-sm fieldInput" id="currency"
-                            placeholder="Saving Account" v-model="account.name" />
+                        <div v-if="modalOperation == 'add'">
+                            <label for="name" class="fieldLabel">Name</label>
+                            <input type="text" class="form-control form-control-sm fieldInput" id="currency"
+                                placeholder="Saving Account" v-model="account.name" />
 
-                        <label for="name" class="fieldLabel">Account Number</label>
-                        <input type="text" class="form-control form-control-sm fieldInput" placeholder="xxxx xxxx xxxx xxxx" v-model="formattedAccountNumber" @input="formatAccountNumber($event)" maxlength="19">
+                            <label for="name" class="fieldLabel">Account Number</label>
+                            <input type="text" class="form-control form-control-sm fieldInput" placeholder="xxxx xxxx xxxx xxxx" v-model="formattedAccountNumber" @input="formatAccountNumber($event)" maxlength="19">
 
-                        <!-- Account type -->
-                        <label for="name" class="fieldLabel">Account Type</label>
-                        <select class="form-control form-control-sm" v-model="account.accountType">
-                            <option value="0">Select an option</option>
-                            <option v-for="(accountType, a) in this.user.accountTypes" :value="accountType.id" :key="a"
-                                v-text="accountType.name"></option>
-                        </select>
+                            <!-- Account type -->
+                            <label for="name" class="fieldLabel">Account Type</label>
+                            <select class="form-control form-control-sm" v-model="account.accountType">
+                                <option value="0">Select an option</option>
+                                <option v-for="(accountType, a) in this.user.accountTypes" :value="accountType.id" :key="a"
+                                    v-text="accountType.name"></option>
+                            </select>
 
-                        <!-- Initial Amount in account -->
-                        <label for="name" class="fieldLabel">Initial Amount</label>
-                        <input type="number" class="form-control form-control-sm fieldInput" id="currency"
-                            placeholder="Amount" v-model="account.amount" />
+                            <!-- Initial Amount in account -->
+                            <label for="name" class="fieldLabel">Initial Amount</label>
+                            <input type="number" class="form-control form-control-sm fieldInput" id="currency"
+                                placeholder="Amount" v-model="account.amount" />
+                        </div>
+
+                        <div v-if="modalOperation == 'delete'" v-text="'Are you sure, you want to remove ' + account.name + ' Account?'">
+                        </div>
 
                     </div>
                     <div class="modal-footer pt-1 pb-1">
                         <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-sm btn-primary" @click="ModalOperation()">Add</button>
+                        <button id="accountsModalActionBtn" type="button" class="btn btn-sm btn-primary" @click="modalOperationFunction()">Add</button>
                     </div>
                 </div>
             </div>
@@ -96,22 +101,37 @@ export default {
         };
     },
     methods: {
-        modalOpen: function (operation) {
+        modalOpen: function (operation, account) {
             this.modalOperation = operation;
-            this.account = { name: '', accountType: 0, amount: 0 };
+            if(operation == 'add'){
+                $('#accountsModalLabel').text('Add Account');
+                $('#accountsModalActionBtn').removeClass("btn-danger");
+                $('#accountsModalActionBtn').addClass("btn-primary");
+                this.formattedAccountNumber = '';
+                this.account = { name: '', accountType: 0, amount: 0 };
+            } else if(operation == 'delete'){
+                $('#accountsModalLabel').text('Remove Account');
+                $('#accountsModalActionBtn').text('Delete');
+                $('#accountsModalActionBtn').removeClass("btn-primary");
+                $('#accountsModalActionBtn').addClass("btn-danger");
+                this.account = account;
+            }
             $('#accountsModal').modal("show");
         },
-        ModalOperation: async function (mode) {
-            if(mode){
+        modalOperationFunction: async function () {
+            let response = null;
+            if(this.modalOperation){
                 if(this.modalOperation == 'add'){
                     this.account.number = this.formattedAccountNumber;
-                    const response = await store.dispatch("addAccount", this.account);
-                    this.accounts = response.data.accounts;
-                    await store.dispatch("updateUserBalance", response.data.user.balance);
+                    this.account.amount = parseFloat(this.account.amount);
+                    response = await store.dispatch("addAccount", this.account);
+                } else if(this.modalOperation == 'delete'){
+                    response = await store.dispatch("deleteAccount", this.account);
                 }
-            }else if(mode == 'delete'){
-                const response = await store.dispatch("deleteAccount", this.account);
             }
+            this.accounts = response.data.accounts;
+            await store.dispatch("updateUserBalance", response.data.user.balance);
+            this.user = store.getters.getCurrentUser;
             $('#accountsModal').modal("hide");
         },
         formatAccountNumber: function(event){
@@ -134,7 +154,6 @@ export default {
     },
     mounted: async function () {
         this.accounts = await store.getters.getAccounts;
-        console.log(this.accounts);
     }
 };
 </script>
