@@ -18,8 +18,8 @@
             <div class="row p-0 m-0">
                 <div class="col col-6" v-for="account in accounts" :key="account.id">
                     <!-- <label v-text="account"></label> -->
-                    <div class="accountCard mb-3">
-                        <div class="accountName">
+                    <div class="accountCard mb-3 pointer">
+                        <div class="accountName" @click="modalOpen('update', account)">
                             <!-- <span style="font-size: 30px;"><font-awesome-icon :icon="user.accountTypes.filter(at => at.id == account.accountType)[0].icon" /></span> -->
                             <div class="mb-2" v-text="account.name"></div>
                             <div v-text="account.number" ></div>
@@ -43,7 +43,7 @@
                     </div>
                     <div class="modal-body">
                         <!-- Account Name -->
-                        <div v-if="modalOperation == 'add'">
+                        <div v-if="modalOperation == 'add' || modalOperation == 'update'">
                             <label for="name" class="fieldLabel">Name</label>
                             <input type="text" class="form-control form-control-sm fieldInput" id="currency"
                                 placeholder="Saving Account" v-model="account.name" />
@@ -53,7 +53,7 @@
 
                             <!-- Account type -->
                             <label for="name" class="fieldLabel">Account Type</label>
-                            <select class="form-control form-control-sm" v-model="account.accountType">
+                            <select class="form-control form-control-sm fieldInput" v-model="account.accountType">
                                 <option value="0">Select an option</option>
                                 <option v-for="(accountType, a) in this.user.accountTypes" :value="accountType.id" :key="a"
                                     v-text="accountType.name"></option>
@@ -115,7 +115,15 @@ export default {
                 $('#accountsModalActionBtn').removeClass("btn-primary");
                 $('#accountsModalActionBtn').addClass("btn-danger");
                 this.account = account;
+            } else if(operation == 'update'){
+                $('#accountsModalLabel').text('Update Account');
+                $('#accountsModalActionBtn').text('Update');
+                $('#accountsModalActionBtn').removeClass("btn-danger");
+                $('#accountsModalActionBtn').addClass("btn-primary");
+                this.account = account;
+                this.formattedAccountNumber = account.number;
             }
+            console.log(this.account);
             $('#accountsModal').modal("show");
         },
         modalOperationFunction: async function () {
@@ -125,12 +133,14 @@ export default {
                     this.account.number = this.formattedAccountNumber;
                     this.account.amount = parseFloat(this.account.amount);
                     response = await store.dispatch("addAccount", this.account);
+                } else if(this.modalOperation == 'update'){
+                    response = await store.dispatch("updateAccount", this.account);
                 } else if(this.modalOperation == 'delete'){
                     response = await store.dispatch("deleteAccount", this.account);
                 }
             }
             this.accounts = response.data.accounts;
-            await store.dispatch("updateUserBalance", response.data.user.balance);
+            await store.dispatch("updateUserBalanceCurrency", response.data.user);
             this.user = store.getters.getCurrentUser;
             $('#accountsModal').modal("hide");
         },

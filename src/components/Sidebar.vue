@@ -99,7 +99,7 @@ export default {
             await axios.put(`/.netlify/functions/user/balance`, { balance: this.user.balance, currency: this.user.currency }, {
                 headers: { Authroization: `bearer ${this.user.token.toString()}` },
             });
-            store.dispatch("updateUserBalance", this.user.balance);
+            store.dispatch("updateUserBalanceCurrency", this.user);
             $('#balanceModalSideBar').modal("hide");
         },
         formatToCurrency: function (amount, currency) {

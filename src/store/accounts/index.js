@@ -48,8 +48,18 @@ export default {
                 return helper.methods.handleError(e);
             }
         },
-        updateAccount(context, data) {
-            context.commit("updateAccount", data);
+        async updateAccount(context, data) {
+            try {
+                const response = await axios.put('/.netlify/functions/account/update', data, {
+                    headers: { Authroization: `bearer ${index.state.auth.currentUser.token.toString()}` },
+                });
+                console.log(response);
+                context.commit("setAccounts", response.data.data.Accounts);
+                return response.data;
+            } catch (e) {
+                console.log(e);
+                return helper.methods.handleError(e);
+            }
         },
         async deleteAccount(context, data) {
             try {

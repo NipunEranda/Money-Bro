@@ -22,8 +22,9 @@ export default {
     updateCurrentUser(state, data) {
       state.currentUser = data;
     },
-    updateUserBalance(state, data){
-      state.currentUser.balance = data;
+    updateUserBalanceCurrency(state, data){
+      state.currentUser.balance = data.balance;
+      state.currentUser.currency = data.currency;
     }
   },
   actions: {
@@ -33,8 +34,8 @@ export default {
     updateCurrentUser(context, data) {
       context.commit("updateCurrentUser", data);
     },
-    updateUserBalance(context, data){
-      context.commit("updateUserBalance", data);
+    updateUserBalanceCurrency(context, data){
+      context.commit("updateUserBalanceCurrency", data);
     }
   }
 }
