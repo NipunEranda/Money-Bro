@@ -16,48 +16,55 @@ exports.saveUser = async (user) => {
         if (!result) {
             user.balance = 0;
             user.currency = 'USD';
-            user.expenseTypes = [],
+            user.expenseTypes = [
+                {
+                    _id: 1, 
+                    name: 'General',
+                    icon: 'fa-home'
+                }
+            ],
             user.incomeTypes = [],
-            user.accountTypes = [{
-                id: 1,
-                name: 'General',
-                icon: 'fa-coins'
-            },
-            {
-                id: 2,
-                name: 'Debit Card',
-                icon: 'fa-credit-card'
-            },
-            {
-                id: 3,
-                name: 'Credit Card',
-                icon: 'fa-credit-bank'
-            },
-            {
-                id: 4,
-                name: 'Cash',
-                icon: 'fa-money-bill'
-            },
-            {
-                id: 5,
-                name: 'Wallet',
-                icon: 'fa-wallet'
-            },
-            {
-                id: 6,
-                name: 'Saving Account',
-                icon: 'fa-piggy-bank'
-            },
-            {
-                id: 7,
-                name: 'Bank',
-                icon: 'fa-building-columns'
-            },
-            {
-                id: 8,
-                name: 'Vault',
-                icon: 'fa-vault'
-            },
+            user.accountTypes = [
+                {
+                    _id: 1,
+                    name: 'General',
+                    icon: 'fa-coins'
+                },
+                {
+                    _id: 2,
+                    name: 'Debit Card',
+                    icon: 'fa-credit-card'
+                },
+                {
+                    _id: 3,
+                    name: 'Credit Card',
+                    icon: 'fa-credit-bank'
+                },
+                {
+                    _id: 4,
+                    name: 'Cash',
+                    icon: 'fa-money-bill'
+                },
+                {
+                    _id: 5,
+                    name: 'Wallet',
+                    icon: 'fa-wallet'
+                },
+                {
+                    _id: 6,
+                    name: 'Saving Account',
+                    icon: 'fa-piggy-bank'
+                },
+                {
+                    _id: 7,
+                    name: 'Bank',
+                    icon: 'fa-building-columns'
+                },
+                {
+                    _id: 8,
+                    name: 'Vault',
+                    icon: 'fa-vault'
+                },
             ];
             insertedU = await database.collection('users').insertOne(user);
             token = await new Promise((resolve, reject) => {

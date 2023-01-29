@@ -42,26 +42,26 @@
                                 icon="fa-close" /></span>
                     </div>
                     <div class="modal-body">
-                        <!-- Account Name -->
                         <div v-if="modalOperation == 'add' || modalOperation == 'update'">
+                            <!-- Account Name -->
                             <label for="name" class="fieldLabel">Name</label>
-                            <input type="text" class="form-control form-control-sm fieldInput" id="currency"
+                            <input type="text" class="form-control form-control-sm fieldInput" id="name"
                                 placeholder="Saving Account" v-model="account.name" />
 
-                            <label for="name" class="fieldLabel">Account Number</label>
-                            <input type="text" class="form-control form-control-sm fieldInput" placeholder="xxxx xxxx xxxx xxxx" v-model="formattedAccountNumber" @input="formatAccountNumber($event)" maxlength="19">
+                            <label for="number" class="fieldLabel">Account Number</label>
+                            <input id="number" type="text" class="form-control form-control-sm fieldInput" placeholder="xxxx xxxx xxxx xxxx" v-model="formattedAccountNumber" @input="formatAccountNumber($event)" maxlength="19">
 
                             <!-- Account type -->
-                            <label for="name" class="fieldLabel">Account Type</label>
-                            <select class="form-control form-control-sm fieldInput" v-model="account.accountType">
+                            <label for="type" class="fieldLabel">Account Type</label>
+                            <select id="type" class="form-control form-control-sm fieldInput" v-model="account.accountType">
                                 <option value="0">Select an option</option>
-                                <option v-for="(accountType, a) in this.user.accountTypes" :value="accountType.id" :key="a"
+                                <option v-for="(accountType, a) in this.user.accountTypes" :value="accountType._id" :key="a"
                                     v-text="accountType.name"></option>
                             </select>
 
                             <!-- Initial Amount in account -->
-                            <label for="name" class="fieldLabel">Initial Amount</label>
-                            <input type="number" class="form-control form-control-sm fieldInput" id="currency"
+                            <label for="amount" class="fieldLabel">Initial Amount</label>
+                            <input id="amount" type="number" class="form-control form-control-sm fieldInput"
                                 placeholder="Amount" v-model="account.amount" />
                         </div>
 
@@ -123,7 +123,6 @@ export default {
                 this.account = account;
                 this.formattedAccountNumber = account.number;
             }
-            console.log(this.account);
             $('#accountsModal').modal("show");
         },
         modalOperationFunction: async function () {
