@@ -5,7 +5,7 @@ import Income from '../views/Income.vue';
 import Expenses from '../views/Expenses.vue';
 import Analysis from '../views/Analysis.vue';
 import Accounts from '../views/Accounts.vue';
-import User from '../views/User.vue';
+import Settings from '../views/Settings.vue';
 import store from '../store';
 
 const routes = [
@@ -40,9 +40,9 @@ const routes = [
     component: Accounts
   },
   {
-    path: '/user',
-    name: 'user',
-    component: User
+    path: '/settings',
+    name: 'settings',
+    component: Settings
   },
 ]
 

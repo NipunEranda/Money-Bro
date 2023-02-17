@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 export default {
     methods: {
         objectToArray(object) {
@@ -6,6 +8,19 @@ export default {
                 array.push(object[id]);
             });
             return array;
+        },
+        currentDateTime() {
+            return moment(new Date()).format('YYYY-MM-DD HH:mm:ss');
+        },
+        currentDateTimeCustomFormat(format) {
+            return moment(new Date()).format(format);
+        },
+        convertDateString(date) {
+            return (new Date(date)).toString().split(" ").splice(0, 5).join(" ");
+        },
+        convertDateType1(date) {
+            // Aug 4th 22
+            return moment(new Date(date)).format("MMM Do YY");
         },
         handleError(e) {
             let response = { error: false, data: null };
