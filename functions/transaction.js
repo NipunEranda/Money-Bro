@@ -50,7 +50,7 @@ exports.addExpense = async (event) => {
             await database.collection('accounts').updateOne({ _id: ObjectId(account._id) }, { $set: { amount: (account.amount - requestData.amount), currency: user.currency } });
 
             //Return data
-            return { status: 200, response: { data: { expenses: await database.collection('expenses').find({ user: data.user._id }).toArray(), user: await database.collection('users').findOne({ email: data.user.email }) }, error: null } };
+            return { status: 200, response: { data: { expenses: await database.collection('expenses').find({ user: data.user._id }).toArray(), accounts: await database.collection('accounts').find({ user: data.user._id }).toArray(), user: await database.collection('users').findOne({ email: data.user.email }) }, error: null } };
         }
         return { status: 500, response: { data: null, error: 'something went wrong' } };
     } catch (e) {
@@ -89,7 +89,7 @@ exports.deleteExpense = async (event) => {
                 await database.collection('accounts').updateOne({ _id: ObjectId(account._id) }, { $set: { amount: (account.amount + expense.amount), currency: user.currency } });
 
                 //Return data
-                return { status: 200, response: { data: { expenses: await database.collection('expenses').find({ user: data.user._id }).toArray(), user: await database.collection('users').findOne({ email: data.user.email }) }, error: null } };
+                return { status: 200, response: { data: { expenses: await database.collection('expenses').find({ user: data.user._id }).toArray(), accounts: await database.collection('accounts').find({ user: data.user._id }).toArray(), user: await database.collection('users').findOne({ email: data.user.email }) }, error: null } };
             }
             
             return { status: 500, response: { data: null, error: 'something went wrong' } };

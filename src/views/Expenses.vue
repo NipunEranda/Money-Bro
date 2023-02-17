@@ -134,6 +134,7 @@ export default {
                 response = await store.dispatch("deleteExpense", this.transaction);
             }
             this.transactions = response.data.expenses;
+            this.accounts = response.data.accounts;
             await store.dispatch("updateUserBalanceCurrency", response.data.user);
             this.user = store.getters.getCurrentUser;
             $('#transactionModal').modal("hide");
