@@ -38,17 +38,15 @@
 
                             <!-- Transaction Type -->
                             <label for="type" class="fieldLabel">Type</label>
-                            <select id="type" class="form-control form-control-sm fieldInput"
-                                v-model="transaction.type">
+                            <select id="type" class="form-control form-control-sm fieldInput" v-model="transaction.type">
                                 <option value="0">Select an option</option>
-                                <option v-for="(expenseType, e) in this.user.expenseTypes" :value="expenseType._id"
-                                    :key="e" v-text="expenseType.name"></option>
+                                <option v-for="(expenseType, e) in this.user.expenseTypes" :value="expenseType._id" :key="e"
+                                    v-text="expenseType.name"></option>
                             </select>
 
                             <!-- Transaction Account -->
                             <label for="type" class="fieldLabel">Account</label>
-                            <select id="type" class="form-control form-control-sm fieldInput"
-                                v-model="transaction.account">
+                            <select id="type" class="form-control form-control-sm fieldInput" v-model="transaction.account">
                                 <option value="0">Select an option</option>
                                 <option v-for="(account, a) in accounts" :value="account._id" :key="a"
                                     v-text="account.name + ' - (' + formatToCurrency(account.amount, this.user.currency) + ')'">
@@ -86,22 +84,7 @@ export default {
             store: useStore(),
             user: store.getters.getCurrentUser,
             modalOperation: 'add',
-            transactions: [
-                {
-                    _id: 1,
-                    name: 'Bill',
-                    type: 2,
-                    amount: 1000,
-                    created: '2022-01-01'
-                },
-                {
-                    _id: 2,
-                    name: 'Bill',
-                    type: 2,
-                    amount: 1000,
-                    created: '2022-12-31'
-                }
-            ],
+            transactions: [],
             transaction: {
                 name: '',
                 account: 0,
@@ -113,6 +96,12 @@ export default {
     },
     methods: {
         addTransaction: function () {
+            this.transaction = {
+                name: '',
+                account: 0,
+                type: 0,
+                amount: 0
+            };
             this.modalOperation = 'add';
             $('#transactionModalLabel').text('Add Expense');
             $('#transactionModalActionBtn').removeClass("btn-danger").addClass("btn-primary").text("Add");
@@ -132,8 +121,22 @@ export default {
             $('#transactionModalActionBtn').removeClass("btn-primary").addClass("btn-danger").text("Delete");
             $('#transactionModal').modal("show");
         },
-        modalOperationFunction: async function (id, modalOperation) {
-            console.log(id, modalOperation);
+        modalOperationFunction: async function () {
+            let response = null;
+            this.transaction.created = new Date();
+            this.transaction.amount = parseFloat(this.transaction.amount);
+
+            if (this.modalOperation == 'add') {
+                response = await store.dispatch("addExpense", this.transaction);
+            } else if (this.modalOperation == 'edit') {
+
+            } else {
+                response = await store.dispatch("deleteExpense", this.transaction);
+            }
+            this.transactions = response.data.expenses;
+            await store.dispatch("updateUserBalanceCurrency", response.data.user);
+            this.user = store.getters.getCurrentUser;
+            $('#transactionModal').modal("hide");
         },
         formatToCurrency: function (amount, currency) {
             return utils.currencyFormatter(amount, currency);
@@ -141,7 +144,7 @@ export default {
     },
     mounted: async function () {
         this.accounts = await store.getters.getAccounts;
-        console.log(this.accounts);
+        this.transactions = await store.getters.getExpenses;
     },
     components: {
         Transaction

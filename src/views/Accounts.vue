@@ -48,9 +48,6 @@
                             <input type="text" class="form-control form-control-sm fieldInput" id="name"
                                 placeholder="Saving Account" v-model="account.name" />
 
-                            <label for="number" class="fieldLabel">Account Number</label>
-                            <input id="number" type="text" class="form-control form-control-sm fieldInput" placeholder="xxxx xxxx xxxx xxxx" v-model="formattedAccountNumber" @input="formatAccountNumber($event)" maxlength="19">
-
                             <!-- Account type -->
                             <label for="type" class="fieldLabel">Account Type</label>
                             <select id="type" class="form-control form-control-sm fieldInput" v-model="account.accountType">
@@ -90,10 +87,8 @@ export default {
             store: useStore(),
             user: store.getters.getCurrentUser,
             accounts: [],
-            formattedAccountNumber: '',
             account: {
                 name: '',
-                number: '',
                 accountType: 0,
                 amount: 0,
             },
@@ -107,7 +102,6 @@ export default {
                 $('#accountsModalLabel').text('Add Account');
                 $('#accountsModalActionBtn').removeClass("btn-danger");
                 $('#accountsModalActionBtn').addClass("btn-primary");
-                this.formattedAccountNumber = '';
                 this.account = { name: '', accountType: 0, amount: 0 };
             } else if(operation == 'delete'){
                 $('#accountsModalLabel').text('Remove Account');
@@ -121,7 +115,6 @@ export default {
                 $('#accountsModalActionBtn').removeClass("btn-danger");
                 $('#accountsModalActionBtn').addClass("btn-primary");
                 this.account = account;
-                this.formattedAccountNumber = account.number;
             }
             $('#accountsModal').modal("show");
         },
@@ -129,7 +122,6 @@ export default {
             let response = null;
             if(this.modalOperation){
                 if(this.modalOperation == 'add'){
-                    this.account.number = this.formattedAccountNumber;
                     this.account.amount = parseFloat(this.account.amount);
                     response = await store.dispatch("addAccount", this.account);
                 } else if(this.modalOperation == 'update'){
@@ -143,20 +135,20 @@ export default {
             this.user = store.getters.getCurrentUser;
             $('#accountsModal').modal("hide");
         },
-        formatAccountNumber: function(event){
-            if(event.inputType != 'deleteContentBackward'){
-                if(this.formattedAccountNumber.replace(/\s/g, '').split("").length == 0){
-                    this.formattedAccountNumber = '';
-                    this.account.number = '';
-                }else{
-                    this.account.number = this.formattedAccountNumber.replace(/\s/g, '');
-                    if(Number.isInteger(this.account.number.split("").length / 4)){
-                        if(this.formattedAccountNumber.split("").length != 19)
-                        this.formattedAccountNumber += " ";
-                    }
-                }
-            }
-        },
+        // formatAccountNumber: function(event){
+        //     if(event.inputType != 'deleteContentBackward'){
+        //         if(this.formattedAccountNumber.replace(/\s/g, '').split("").length == 0){
+        //             this.formattedAccountNumber = '';
+        //             this.account.number = '';
+        //         }else{
+        //             this.account.number = this.formattedAccountNumber.replace(/\s/g, '');
+        //             if(Number.isInteger(this.account.number.split("").length / 4)){
+        //                 if(this.formattedAccountNumber.split("").length != 19)
+        //                 this.formattedAccountNumber += " ";
+        //             }
+        //         }
+        //     }
+        // },
         formatToCurrency: function (amount, currency) {
             return utils.currencyFormatter(amount, currency);
         }

@@ -43,10 +43,10 @@
         <router-link class="text col col-2 p-0 m-0 " to="/user">
             <div class="bottomBar_item unselectable">
                 <div>
-                    <span class="large-font-size"><font-awesome-icon icon="fa-id-badge" /></span>
+                    <span class="large-font-size"><font-awesome-icon icon="fa-gear" /></span>
                 </div>
                 <div>
-                    <span class="icon_text">USER</span>
+                    <span class="icon_text">SETTINGS</span>
                 </div>
             </div>
         </router-link>

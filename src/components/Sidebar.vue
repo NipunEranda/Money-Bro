@@ -32,7 +32,7 @@
         </router-link>
         <router-link class="text" to="/user">
             <div class="sidebar_item unselectable">
-                <span class="me-2 large-font-size"><font-awesome-icon icon="fa-user-tie" /></span><span>USER</span>
+                <span class="me-2 large-font-size"><font-awesome-icon icon="fa-gear" /></span><span>SETTINGS</span>
             </div>
         </router-link>
         <div class="sidebar_item unselectable sidebar_end" @click="this.$store.dispatch('logout')">
