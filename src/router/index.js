@@ -52,7 +52,7 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from) => {
-  if(!store.state.auth.currentUser && to.name !== "index")
+  if(!store.state.auth.currentUser && to.name !== "index" || (!axios.defaults.headers.common['Authorization'] && to.name !== "index"))
     return '/';
 });
 

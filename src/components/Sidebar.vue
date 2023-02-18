@@ -30,7 +30,7 @@
                         icon="fa-credit-card" /></span><span>ACCOUNTS</span>
             </div>
         </router-link>
-        <router-link class="text" to="/user">
+        <router-link class="text" to="/settings">
             <div class="sidebar_item unselectable">
                 <span class="me-2 large-font-size"><font-awesome-icon icon="fa-gear" /></span><span>SETTINGS</span>
             </div>

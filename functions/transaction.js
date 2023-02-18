@@ -61,6 +61,46 @@ exports.addExpense = async (event) => {
     }
 }
 
+exports.updateExpense = async (event) => {
+    let mongoClient;
+    try {
+        mongoClient = new MongoClient(process.env.MONGO_URL);
+        const clientPromise = mongoClient.connect();
+        const data = auth.getUserDataFromToken(event);
+        const database = (await clientPromise).db(process.env.MONGO_DB);
+        if (data) {
+            const updateBody = JSON.parse(event.body);
+
+            //Get user
+            const user = await database.collection('users').findOne({ email: data.user.email });
+
+            //Get expense
+            const expense = await database.collection('expenses').findOne({ _id: ObjectId(updateBody._id) });
+
+            //Update expense
+            await database.collection('expenses').updateOne({ _id: ObjectId(updateBody._id) }, { $set: { amount: updateBody.amount } });
+
+            // Get Account
+            const account = await database.collection('accounts').findOne({ _id: ObjectId(updateBody.account) });
+
+            //Update account balance
+            await database.collection('accounts').updateOne({ _id: ObjectId(account._id) }, { $set: { amount: (account.amount + expense.amount - updateBody.amount), currency: user.currency } });
+
+            //Update user balance
+            await database.collection('users').updateOne({ "email": data.user.email }, { $set: { balance: (user.balance + expense.amount - updateBody.amount), currency: user.currency } });
+
+            //Return data
+            return { status: 200, response: { data: { expenses: await database.collection('expenses').find({ user: data.user._id }).toArray(), accounts: await database.collection('accounts').find({ user: data.user._id }).toArray(), user: await database.collection('users').findOne({ email: data.user.email }) }, error: null } };
+        }
+        return { status: 500, response: { data: null, error: 'something went wrong' } };
+    } catch (e) {
+        console.log(e);
+        return { status: 500, response: { data: null, error: err } };
+    } finally {
+        mongoClient.close();
+    }
+}
+
 exports.deleteExpense = async (event) => {
     let mongoClient;
     try {
@@ -91,7 +131,7 @@ exports.deleteExpense = async (event) => {
                 //Return data
                 return { status: 200, response: { data: { expenses: await database.collection('expenses').find({ user: data.user._id }).toArray(), accounts: await database.collection('accounts').find({ user: data.user._id }).toArray(), user: await database.collection('users').findOne({ email: data.user.email }) }, error: null } };
             }
-            
+
             return { status: 500, response: { data: null, error: 'something went wrong' } };
         }
     } catch (e) {
@@ -136,6 +176,8 @@ const handler = async function (event, context) {
             result = await exports.addExpense(event);
         } else if (event.path == '/.netlify/functions/transaction/expenses/delete' && event.httpMethod == 'DELETE') {
             result = await exports.deleteExpense(event);
+        } else if (event.path == '/.netlify/functions/transaction/expenses/update' && event.httpMethod == 'PUT') {
+            result = await exports.updateExpense(event);
         } else if (event.path == '/.netlify/functions/transaction/incomes/get' && event.httpMethod == 'GET') {
             result = await exports.getIncomes(event);
         }

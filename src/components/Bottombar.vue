@@ -40,7 +40,7 @@
                 </div>
             </div>
         </router-link>
-        <router-link class="text col col-2 p-0 m-0 " to="/user">
+        <router-link class="text col col-2 p-0 m-0 " to="/settings">
             <div class="bottomBar_item unselectable">
                 <div>
                     <span class="large-font-size"><font-awesome-icon icon="fa-gear" /></span>
