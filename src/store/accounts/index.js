@@ -14,9 +14,7 @@ export default {
     getters: {
         async getAccounts(state) {
             try {
-                const response = await axios.get('/.netlify/functions/account/get', {
-                    headers: { Authroization: `bearer ${index.state.auth.currentUser.token.toString()}` },
-                });
+                const response = await axios.get('/.netlify/functions/account/get');
                 state.Accounts = response.data.data;
             } catch (e) {
                 console.log(e);
@@ -38,9 +36,7 @@ export default {
         },
         async addAccount(context, data) {
             try {
-                const response = await axios.post('/.netlify/functions/account/add', data, {
-                    headers: { Authroization: `bearer ${index.state.auth.currentUser.token.toString()}` },
-                });
+                const response = await axios.post('/.netlify/functions/account/add', data);
                 context.commit("setAccounts", response.data.data.Accounts);
                 return response.data;
             } catch (e) {
@@ -50,9 +46,7 @@ export default {
         },
         async updateAccount(context, data) {
             try {
-                const response = await axios.put('/.netlify/functions/account/update', data, {
-                    headers: { Authroization: `bearer ${index.state.auth.currentUser.token.toString()}` },
-                });
+                const response = await axios.put('/.netlify/functions/account/update', data);
                 console.log(response);
                 context.commit("setAccounts", response.data.data.Accounts);
                 return response.data;
@@ -63,9 +57,7 @@ export default {
         },
         async deleteAccount(context, data) {
             try {
-                const response = await axios.delete(`/.netlify/functions/account/delete?id=${data._id}`, {
-                    headers: { Authroization: `bearer ${index.state.auth.currentUser.token.toString()}` },
-                });
+                const response = await axios.delete(`/.netlify/functions/account/delete?id=${data._id}`);
                 context.commit("setAccounts", response.data.data.Accounts);
                 return response.data;
             } catch (e) {

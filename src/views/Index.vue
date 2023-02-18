@@ -76,12 +76,12 @@ export default {
               .post(`/.netlify/functions/auth/google`, response.data)
               .then((res) => {
                 if (!res.data.error) {
+                  axios.defaults.headers.common['Authorization'] = `bearer ${res.data.data.token}`;
                   store.dispatch("updateCurrentUser", {
                     id: res.data.data.user._id,
                     email: response.data.email,
                     name: response.data.name,
                     sub: response.data.sub,
-                    token: res.data.data.token,
                     balance: res.data.data.user.balance,
                     currency: res.data.data.user.currency,
                     accountTypes: res.data.data.user.accountTypes,
